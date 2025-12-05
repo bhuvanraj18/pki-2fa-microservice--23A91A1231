@@ -1,22 +1,42 @@
 #!/usr/bin/env python3
-import os
+import sys, os
 from datetime import datetime, timezone
+
+# Make sure Python can see the app module
+sys.path.append("/srv/app")
+sys.path.append("/srv/app/app")
+
 from app.crypto_utils import SEED_FILE_PATH, generate_totp_code
 
 def main():
     if not os.path.exists(SEED_FILE_PATH):
-        print("Seed not decrypted yet", flush=True)
+        print("Seed file missing")
         return
 
-    with open(SEED_FILE_PATH, "r") as f:
-        seed = f.read().strip()
+    code = generate_totp_code()
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    print(f"{timestamp} - 2FA Code: {code}")
 
-    code = generate_totp_code(seed)
+if __name__ == "__main__":
+    main()
+#!/usr/bin/env python3
+import sys, os
+from datetime import datetime, timezone
 
-    now = datetime.now(timezone.utc)
-    timestamp = now.strftime("%Y-%m-%d %H:%M:%S")
+# Make sure Python can see the app module
+sys.path.append("/srv/app")
+sys.path.append("/srv/app/app")
 
-    print(f"{timestamp} - 2FA Code: {code}", flush=True)
+from app.crypto_utils import SEED_FILE_PATH, generate_totp_code
+
+def main():
+    if not os.path.exists(SEED_FILE_PATH):
+        print("Seed file missing")
+        return
+
+    code = generate_totp_code()
+    timestamp = datetime.now(timezone.utc).strftime("%Y-%m-%d %H:%M:%S")
+    print(f"{timestamp} - 2FA Code: {code}")
 
 if __name__ == "__main__":
     main()
