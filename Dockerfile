@@ -1,3 +1,13 @@
+FROM python:3.10-slim
+
+WORKDIR /srv/app
+
+COPY . .
+
+RUN pip install --upgrade pip
+RUN pip install -r requirements.txt
+
+
 FROM python:3.11-slim AS builder
 
 WORKDIR /app
