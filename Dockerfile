@@ -18,6 +18,9 @@ WORKDIR /app
 
 COPY --from=builder /install /usr/local
 COPY . /app
+COPY cron/totp_cron /etc/cron.d/totp_cron
+RUN chmod 0644 /etc/cron.d/totp_cron
+
 
 RUN mkdir -p /data /cron
 RUN chmod 644 /app/cron/2fa-cron && crontab /app/cron/2fa-cron
