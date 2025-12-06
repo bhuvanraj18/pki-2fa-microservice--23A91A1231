@@ -19,6 +19,17 @@ class SeedRequest(BaseModel):
 class VerifyRequest(BaseModel):
     code: str
 
+
+@app.get("/status")
+def status():
+    return {"status": "ok"}
+
+
+@app.get("/health")
+def health():
+    return {"status": "ok"}
+
+
 @app.post("/decrypt-seed")
 def decrypt_endpoint(body: SeedRequest):
     try:
@@ -34,6 +45,7 @@ def decrypt_endpoint(body: SeedRequest):
     except Exception:
         raise HTTPException(status_code=500, detail="Decryption failed")
 
+
 @app.get("/generate-2fa")
 def generate_2fa():
     if not os.path.exists(SEED_FILE_PATH):
@@ -47,6 +59,7 @@ def generate_2fa():
 
     return {"code": code, "valid_for": remaining}
 
+
 @app.post("/verify-2fa")
 def verify_2fa(body: VerifyRequest):
     if not os.path.exists(SEED_FILE_PATH):
@@ -57,7 +70,3 @@ def verify_2fa(body: VerifyRequest):
 
     valid = verify_totp_code(seed, body.code)
     return {"valid": valid}
-
-@app.get("/health")
-def health():
-    return {"status": "ok"}
