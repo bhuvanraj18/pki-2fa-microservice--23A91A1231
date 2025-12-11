@@ -5,3 +5,4 @@ service cron start || cron || true
 mkdir -p /cron
 touch /cron/last_code.txt
 tail -F /cron/last_code.txt
+
